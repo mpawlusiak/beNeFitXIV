@@ -42,28 +42,15 @@
       background: transparent !important;
     }
 
-    /* 
-      Creates the soft fade-in animation 
-      so background pages don't harsh-pop
-    */
-    @keyframes softFadeIn {
-      0% { opacity: 0; }
-      100% { opacity: 1; }
-    }
-
     #flipbook .page {
       background: transparent !important;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       overflow: hidden;
       position: relative;
-      transition: box-shadow 0.3s ease;
       
       /* Adds the frosted glass blur effect */
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-
-      /* Applies the fade-in whenever Turn.js loads a background page */
-      animation: softFadeIn 0.8s ease-in-out forwards;
     }
 
     #flipbook .page img {
@@ -211,6 +198,17 @@
           elevation: 50,
           acceleration: false,
           when: {
+            start: function(event, pageObject, corner) {
+              isTurning = true;
+              var $book = $(this);
+              
+              // Force the upcoming pages to render immediately so they are visible under the turning page
+              if (pageObject && pageObject.next) {
+                var nextView = $book.turn('view', pageObject.next);
+                if (nextView[0]) $book.turn('pageElement', nextView[0]).parent().css({display: 'block', visibility: 'visible'});
+                if (nextView[1]) $book.turn('pageElement', nextView[1]).parent().css({display: 'block', visibility: 'visible'});
+              }
+            },
             turning: function(){ isTurning = true; },
             turned:  function(){ isTurning = false; updateArrows(); }
           }
