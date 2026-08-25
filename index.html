@@ -12,10 +12,11 @@
 
   <style>
     :root{
-      var-native-page-w: 525.6px;
-      var-native-page-h: 792px;
-      var-native-book-w: calc(var(--native-page-w) * 2);
-      var-native-book-h: var(--native-page-h);
+      /* Native, exact, single-page dimensions */
+      --native-page-w: 525.6px;
+      --native-page-h: 792px;
+      --native-book-w: calc(var(--native-page-w) * 2);
+      --native-book-h: var(--native-page-h);
     }
 
     html, body {
@@ -36,17 +37,21 @@
 
     /* Force all Turn.js layers to be transparent */
     #flipbook, 
-    #flipbook .page,
     #flipbook .turn-page-wrapper,
     #flipbook .turn-page {
       background: transparent !important;
     }
 
     #flipbook .page {
+      background: transparent !important;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       overflow: hidden;
       position: relative;
       transition: box-shadow 0.3s ease;
+      
+      /* Adds the frosted glass blur effect */
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
 
     #flipbook .page img {
@@ -68,7 +73,8 @@
       background:linear-gradient(to right, rgba(0,0,0,0.05), transparent);
       pointer-events:none; z-index:1;
     }
-    #flipbook .page:nth-child(even):::before {
+    
+    #flipbook .page:nth-child(even)::before {
       left:auto; right:0;
       background:linear-gradient(to left, rgba(0,0,0,0.05), transparent);
     }
