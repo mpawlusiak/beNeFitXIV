@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>beNeFit XIII Booklet</title>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Turn.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
+
+  <style>
+    :root{
+      var-native-page-w: 525.6px;
+      var-native-page-h: 792px;
+      var-native-book-w: calc(var(--native-page-w) * 2);
+      var-native-book-h: var(--native-page-h);
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden !important;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #flipbook-container {
+      position: relative;
+    }
+
+    /* Force all Turn.js layers to be transparent */
+    #flipbook, 
+    #flipbook .page,
+    #flipbook .turn-page-wrapper,
+    #flipbook .turn-page {
+      background: transparent !important;
+    }
+
+    #flipbook .page {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      position: relative;
+      transition: box-shadow 0.3s ease;
+    }
+
+    #flipbook .page img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: fill;
+      image-rendering: auto;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      background: transparent;
+    }
+
+    #flipbook .page::before {
+      content:"";
+      position:absolute;
+      top:0; left:0;
+      width:10px; height:100%;
+      background:linear-gradient(to right, rgba(0,0,0,0.05), transparent);
+      pointer-events:none; z-index:1;
+    }
+    #flipbook .page:nth-child(even):::before {
+      left:auto; right:0;
+      background:linear-gradient(to left, rgba(0,0,0,0.05), transparent);
+    }
+
+    .nav-arrow {
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:50px; height:50px;
+      background:rgba(0,0,0,0.4);
+      border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer;
+      z-index:1000;
+      transition: background .3s ease, opacity .25s ease;
+      user-select:none; -webkit-user-select:none;
+      opacity:1;
+    }
+    .nav-arrow.is-hidden { opacity:0; pointer-events:none; }
+    .nav-arrow:hover { background:rgba(0,0,0,0.6); }
+
+    .arrow-left { left:-60px; }
+    .arrow-right { right:-60px; }
+
+    .nav-arrow svg { width:24px; height:24px; fill:#fff; }
+
+    @media (max-width: 900px){
+      .arrow-left { left:10px; }
+      .arrow-right { right:10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="flipbook-container">
+    <div class="nav-arrow arrow-left" id="prevBtn" aria-label="Previous page">
+      <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+      </svg>
+    </div>
+
+    <div id="flipbook">
+      <!-- PNG format used for transparency support -->
+      <div class="page"><img src="pages/page_1.png"  alt="Page 1"></div>
+      <div class="page"><img src="pages/page_2.png"  alt="Page 2"></div>
+      <div class="page"><img src="pages/page_3.png"  alt="Page 3"></div>
+      <div class="page"><img src="pages/page_4.png"  alt="Page 4"></div>
+      <div class="page"><img src="pages/page_5.png"  alt="Page 5"></div>
+      <div class="page"><img src="pages/page_6.png"  alt="Page 6"></div>
+      <div class="page"><img src="pages/page_7.png"  alt="Page 7"></div>
+      <div class="page"><img src="pages/page_8.png"  alt="Page 8"></div>
+      <div class="page"><img src="pages/page_9.png"  alt="Page 9"></div>
+      <div class="page"><img src="pages/page_10.png" alt="Page 10"></div>
+    </div>
+
+    <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
+      <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+      </svg>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const NATIVE_PAGE_W = 525.6;
+      const NATIVE_PAGE_H = 792;
+      const NATIVE_BOOK_W = NATIVE_PAGE_W * 2;
+      const NATIVE_BOOK_H = NATIVE_PAGE_H;
+
+      let isTurning = false;
+
+      function desiredBookSize(){
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        const sideGutter = 160;
+        const topBottomGutter = 40;
+
+        const maxW = Math.max(320, vw - sideGutter);
+        const maxH = Math.max(240, vh - topBottomGutter);
+
+        const scaleW = maxW / NATIVE_BOOK_W;
+        const scaleH = maxH / NATIVE_BOOK_H;
+        const scale = Math.min(scaleW, scaleH, 1); 
+
+        return {
+          w: Math.round(NATIVE_BOOK_W * scale),
+          h: Math.round(NATIVE_BOOK_H * scale)
+        };
+      }
+
+      function applySize(){
+        const size = desiredBookSize();
+        const $book = $('#flipbook');
+
+        $book.turn('size', size.w, size.h);
+
+        const container = document.getElementById('flipbook-container');
+        container.style.width  = size.w + 'px';
+        container.style.height = size.h + 'px';
+      }
+
+      function updateArrows(){
+        const $book = $('#flipbook');
+        const current = $book.turn('page')  || 1;
+        const total   = $book.turn('pages') || 1;
+
+        const atFront = current === 1;
+        const atBack  = current === total;
+
+        $('#prevBtn').toggleClass('is-hidden', atFront);
+        $('#nextBtn').toggleClass('is-hidden', atBack);
+      }
+
+      function initTurn(){
+        $('#flipbook').turn({
+          width:  NATIVE_BOOK_W,
+          height: NATIVE_BOOK_H,
+          autoCenter: true,
+          duration: 1200,
+          gradients: true,
+          elevation: 50,
+          acceleration: false,
+          when: {
+            turning: function(){ isTurning = true; },
+            turned:  function(){ isTurning = false; updateArrows(); }
+          }
+        });
+      }
+
+      function bindNav(){
+        $('#prevBtn').on('click', function(){
+          if (!isTurning) $('#flipbook').turn('previous');
+        });
+        $('#nextBtn').on('click', function(){
+          if (!isTurning) $('#flipbook').turn('next');
+        });
+
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowLeft')  $('#flipbook').turn('previous');
+          if (e.key === 'ArrowRight') $('#flipbook').turn('next');
+        });
+      }
+
+      $(function(){
+        initTurn();
+        bindNav();
+        applySize();                 
+        updateArrows();              
+        window.addEventListener('resize', applySize);
+      });
+    })();
+  </script>
+</body>
+</html>
