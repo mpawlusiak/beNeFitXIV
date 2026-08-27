@@ -12,7 +12,7 @@
 
   <style>
     :root{
-      /* Native, exact, single-page dimensions. Rounded to even integer to prevent sub-pixel rendering bugs */
+      /* Native, exact, single-page dimensions. Rounded to even integer. */
       --native-page-w: 526px;
       --native-page-h: 792px;
       --native-book-w: calc(var(--native-page-w) * 2);
@@ -35,19 +35,17 @@
       position: relative;
     }
 
-    /* Force pure transparency and kill ALL mathematical clipping shadows and borders */
+    /* Force pure transparency and kill mathematical clipping shadows/borders */
+    /* Margins remain untouched so Turn.js can accurately offset the cover */
     #flipbook, 
     #flipbook .turn-page-wrapper,
     #flipbook .turn-page,
     #flipbook .turn-shadow,
-    #flipbook .page,
-    #flipbook * {
+    #flipbook .page {
       background-color: transparent !important;
       background-image: none !important; 
       box-shadow: none !important;
       border: none !important;
-      margin: 0 !important;
-      padding: 0 !important;
     }
 
     #flipbook .page {
@@ -126,7 +124,6 @@
 
   <script>
     (function(){
-      // Replaced fractional 525.6 with 526 to prevent subpixel rendering artifacts
       const NATIVE_PAGE_W = 526;
       const NATIVE_PAGE_H = 792;
       const NATIVE_BOOK_W = NATIVE_PAGE_W * 2;
@@ -151,10 +148,10 @@
         let calcW = Math.round(NATIVE_BOOK_W * scale);
         let calcH = Math.round(NATIVE_BOOK_H * scale);
 
-        // Turn.js splits the book width precisely in half for each page.
-        // Forcing calcW to an even number fixes jagged overlapping edges.
-        if (calcW % 2 !== 0) calcW += 1;
-        if (calcH % 2 !== 0) calcH += 1;
+        // Force calcW to be a strict multiple of 4 to guarantee perfectly even 
+        // page widths and integer pivot points, eliminating sub-pixel shifts.
+        if (calcW % 4 !== 0) calcW += (4 - (calcW % 4));
+        if (calcH % 2 !== 0) calcH += (2 - (calcH % 2));
 
         return {
           w: calcW,
