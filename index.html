@@ -4,8 +4,10 @@
   <meta charset="UTF-8" />
   <title>beNeFit XIII Booklet</title>
 
+  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
+  <!-- Turn.js -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/3/turn.min.js"></script>
 
   <style>
@@ -33,19 +35,20 @@
       position: relative;
     }
 
-    /* Force all Turn.js layers to be transparent */
+    /* Force pure transparency and kill ALL mathematical clipping shadows */
     #flipbook, 
     #flipbook .turn-page-wrapper,
-    #flipbook .turn-page {
+    #flipbook .turn-page,
+    #flipbook .turn-shadow,
+    #flipbook .page {
       background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
     }
 
     #flipbook .page {
-      /* Uses a stable 85% white transparency instead of a buggy hardware blur */
-      background: rgba(255, 255, 255, 0.85) !important;
       overflow: hidden;
       position: relative;
-      /* Box shadow removed here */
     }
 
     #flipbook .page img {
@@ -58,8 +61,6 @@
       transform-style: preserve-3d;
       background: transparent;
     }
-
-    /* Inner binding shadow gradients have been entirely removed */
 
     .nav-arrow {
       position:absolute;
@@ -176,7 +177,6 @@
           height: NATIVE_BOOK_H,
           autoCenter: true,
           duration: 1200,
-          /* Disabled gradients to prevent artificial shadows on transparent pages */
           gradients: false,
           elevation: 50,
           acceleration: false,
