@@ -35,16 +35,22 @@
       position: relative;
     }
 
-    /* Force all Turn.js wrappers to be transparent */
+    /* Force pure transparency and kill ALL mathematical clipping shadows and borders */
     #flipbook, 
     #flipbook .turn-page-wrapper,
-    #flipbook .turn-page {
-      background: transparent !important;
+    #flipbook .turn-page,
+    #flipbook .turn-shadow,
+    #flipbook .page,
+    #flipbook * {
+      background-color: transparent !important;
+      background-image: none !important; 
+      box-shadow: none !important;
+      border: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
     }
 
     #flipbook .page {
-      /* Uses a stable 85% white transparency */
-      background: rgba(255, 255, 255, 0.85) !important;
       overflow: hidden;
       position: relative;
     }
@@ -186,7 +192,7 @@
           autoCenter: true,
           duration: 1200,
           gradients: false,
-          elevation: 50,
+          elevation: 0,
           acceleration: false,
           when: {
             turning: function(){ isTurning = true; },
