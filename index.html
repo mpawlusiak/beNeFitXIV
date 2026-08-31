@@ -49,6 +49,12 @@
       overflow: hidden;
       position: relative;
       background: transparent !important;
+      opacity: 0;
+      transition: opacity 0.7s ease-in-out;
+    }
+
+    #flipbook .page.is-active {
+      opacity: 1;
     }
 
     #flipbook .page img {
@@ -60,12 +66,6 @@
       backface-visibility: hidden;
       transform-style: preserve-3d;
       background: transparent !important;
-      transition: filter 0.5s ease-in-out;
-    }
-
-    /* Target wrapper state managed cleanly via API callbacks */
-    #flipbook .page.is-buried img {
-      filter: blurpx;
     }
 
     .nav-arrow {
@@ -106,16 +106,16 @@
     </div>
 
     <div id="flipbook">
-      <div class="page" data-page="1"><img src="pages/page_1.png?v=10" alt="Page 1"></div>
-      <div class="page" data-page="2"><img src="pages/page_2.png?v=10" alt="Page 2"></div>
-      <div class="page" data-page="3"><img src="pages/page_3.png?v=10" alt="Page 3"></div>
-      <div class="page" data-page="4"><img src="pages/page_4.png?v=10" alt="Page 4"></div>
-      <div class="page" data-page="5"><img src="pages/page_5.png?v=10" alt="Page 5"></div>
-      <div class="page" data-page="6"><img src="pages/page_6.png?v=10" alt="Page 6"></div>
-      <div class="page" data-page="7"><img src="pages/page_7.png?v=10" alt="Page 7"></div>
-      <div class="page" data-page="8"><img src="pages/page_8.png?v=10" alt="Page 8"></div>
-      <div class="page" data-page="9"><img src="pages/page_9.png?v=10" alt="Page 9"></div>
-      <div class="page" data-page="10"><img src="pages/page_10.png?v=10" alt="Page 10"></div>
+      <div class="page" data-page="1"><img src="pages/page_1.png?v=11" alt="Page 1"></div>
+      <div class="page" data-page="2"><img src="pages/page_2.png?v=11" alt="Page 2"></div>
+      <div class="page" data-page="3"><img src="pages/page_3.png?v=11" alt="Page 3"></div>
+      <div class="page" data-page="4"><img src="pages/page_4.png?v=11" alt="Page 4"></div>
+      <div class="page" data-page="5"><img src="pages/page_5.png?v=11" alt="Page 5"></div>
+      <div class="page" data-page="6"><img src="pages/page_6.png?v=11" alt="Page 6"></div>
+      <div class="page" data-page="7"><img src="pages/page_7.png?v=11" alt="Page 7"></div>
+      <div class="page" data-page="8"><img src="pages/page_8.png?v=11" alt="Page 8"></div>
+      <div class="page" data-page="9"><img src="pages/page_9.png?v=11" alt="Page 9"></div>
+      <div class="page" data-page="10"><img src="pages/page_10.png?v=11" alt="Page 10"></div>
     </div>
 
     <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
@@ -171,7 +171,7 @@
         container.style.height = size.h + 'px';
       }
 
-      function updateBlurStates(targetView){
+      function updateActiveStates(targetView){
         const $book = $('#flipbook');
         const view = targetView || $book.turn('view');
 
@@ -179,12 +179,10 @@
           const $p = $(this);
           const pNum = parseInt($p.attr('data-page'), 10);
           
-          let isInView = view.includes(pNum);
-
-          if (isInView) {
-            $p.removeClass('is-buried');
+          if (view.includes(pNum)) {
+            $p.addClass('is-active');
           } else {
-            $p.addClass('is-buried');
+            $p.removeClass('is-active');
           }
         });
       }
@@ -215,11 +213,11 @@
           when: {
             turning: function(e, page, view){ 
               isTurning = true; 
-              updateBlurStates(view);
+              updateActiveStates(view);
             },
             turned:  function(e, page){ 
               isTurning = false; 
-              updateBlurStates();
+              updateActiveStates();
               updateArrows(); 
             }
           }
@@ -229,7 +227,7 @@
         container.style.width  = initialSize.w + 'px';
         container.style.height = initialSize.h + 'px';
 
-        updateBlurStates();
+        updateActiveStates();
       }
 
       function bindNav(){
