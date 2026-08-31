@@ -53,8 +53,13 @@
       transition: opacity 0.7s ease-in-out;
     }
 
+    /* Apply background blur strictly to active pages to block out elements underneath */
     #flipbook .page.is-active {
       opacity: 1;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background-color: rgba(255, 255, 255, 0.15) !important;
+      border-radius: 12px;
     }
 
     #flipbook .page img {
@@ -106,16 +111,16 @@
     </div>
 
     <div id="flipbook">
-      <div class="page" data-page="1"><img src="pages/page_1.png?v=11" alt="Page 1"></div>
-      <div class="page" data-page="2"><img src="pages/page_2.png?v=11" alt="Page 2"></div>
-      <div class="page" data-page="3"><img src="pages/page_3.png?v=11" alt="Page 3"></div>
-      <div class="page" data-page="4"><img src="pages/page_4.png?v=11" alt="Page 4"></div>
-      <div class="page" data-page="5"><img src="pages/page_5.png?v=11" alt="Page 5"></div>
-      <div class="page" data-page="6"><img src="pages/page_6.png?v=11" alt="Page 6"></div>
-      <div class="page" data-page="7"><img src="pages/page_7.png?v=11" alt="Page 7"></div>
-      <div class="page" data-page="8"><img src="pages/page_8.png?v=11" alt="Page 8"></div>
-      <div class="page" data-page="9"><img src="pages/page_9.png?v=11" alt="Page 9"></div>
-      <div class="page" data-page="10"><img src="pages/page_10.png?v=11" alt="Page 10"></div>
+      <div class="page" data-page="1"><img src="pages/page_1.png?v=12" alt="Page 1"></div>
+      <div class="page" data-page="2"><img src="pages/page_2.png?v=12" alt="Page 2"></div>
+      <div class="page" data-page="3"><img src="pages/page_3.png?v=12" alt="Page 3"></div>
+      <div class="page" data-page="4"><img src="pages/page_4.png?v=12" alt="Page 4"></div>
+      <div class="page" data-page="5"><img src="pages/page_5.png?v=12" alt="Page 5"></div>
+      <div class="page" data-page="6"><img src="pages/page_6.png?v=12" alt="Page 6"></div>
+      <div class="page" data-page="7"><img src="pages/page_7.png?v=12" alt="Page 7"></div>
+      <div class="page" data-page="8"><img src="pages/page_8.png?v=12" alt="Page 8"></div>
+      <div class="page" data-page="9"><img src="pages/page_9.png?v=12" alt="Page 9"></div>
+      <div class="page" data-page="10"><img src="pages/page_10.png?v=12" alt="Page 10"></div>
     </div>
 
     <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
