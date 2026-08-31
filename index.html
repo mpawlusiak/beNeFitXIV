@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>beNeFit XIII Booklet</title>
+  <title>beNeFit XIV Booklet</title>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -45,12 +45,10 @@
       border: none !important;
     }
 
-    /* Force all pages and dynamic turn wrappers to remain fully opaque so underlying pages show constantly */
-    #flipbook .page,
-    #flipbook .turn-page-wrapper {
-      opacity: 1 !important;
+    #flipbook .page {
       overflow: hidden;
       position: relative;
+      opacity: 1 !important;
     }
 
     #flipbook .page img {
@@ -102,16 +100,16 @@
     </div>
 
     <div id="flipbook">
-      <div class="page"><img src="pages/page_1.png?v=2"  alt="Page 1"></div>
-      <div class="page"><img src="pages/page_2.png?v=2"  alt="Page 2"></div>
-      <div class="page"><img src="pages/page_3.png?v=2"  alt="Page 3"></div>
-      <div class="page"><img src="pages/page_4.png?v=2"  alt="Page 4"></div>
-      <div class="page"><img src="pages/page_5.png?v=2"  alt="Page 5"></div>
-      <div class="page"><img src="pages/page_6.png?v=2"  alt="Page 6"></div>
-      <div class="page"><img src="pages/page_7.png?v=2"  alt="Page 7"></div>
-      <div class="page"><img src="pages/page_8.png?v=2"  alt="Page 8"></div>
-      <div class="page"><img src="pages/page_9.png?v=2"  alt="Page 9"></div>
-      <div class="page"><img src="pages/page_10.png?v=2" alt="Page 10"></div>
+      <div class="page"><img src="pages/page_1.png?v=3"  alt="Page 1"></div>
+      <div class="page"><img src="pages/page_2.png?v=3"  alt="Page 2"></div>
+      <div class="page"><img src="pages/page_3.png?v=3"  alt="Page 3"></div>
+      <div class="page"><img src="pages/page_4.png?v=3"  alt="Page 4"></div>
+      <div class="page"><img src="pages/page_5.png?v=3"  alt="Page 5"></div>
+      <div class="page"><img src="pages/page_6.png?v=3"  alt="Page 6"></div>
+      <div class="page"><img src="pages/page_7.png?v=3"  alt="Page 7"></div>
+      <div class="page"><img src="pages/page_8.png?v=3"  alt="Page 8"></div>
+      <div class="page"><img src="pages/page_9.png?v=3"  alt="Page 9"></div>
+      <div class="page"><img src="pages/page_10.png?v=3" alt="Page 10"></div>
     </div>
 
     <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
@@ -187,12 +185,17 @@
           height: initialSize.h,
           autoCenter: true,
           duration: 1200,
-          gradients: false,
-          elevation: 0,
-          acceleration: false,
+          gradients: true,
+          elevation: 50,
+          acceleration: true,
           when: {
-            turning: function(){ isTurning = true; },
-            turned:  function(){ isTurning = false; updateArrows(); }
+            turning: function(e, page, view){ 
+              isTurning = true; 
+            },
+            turned:  function(e, page){ 
+              isTurning = false; 
+              updateArrows(); 
+            }
           }
         });
 
