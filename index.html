@@ -48,13 +48,23 @@
     #flipbook .page {
       overflow: hidden;
       position: relative;
-      /* Add a semi-transparent backing color with backdrop-filter blur to obstruct the underlying page */
-      background-color: rgba(255, 255, 255, 0.85) !important;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+    }
+
+    /* Solid/frosted backing layer behind the image without touching PNG transparency */
+    #flipbook .page::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.9);
+      z-index: 1;
     }
 
     #flipbook .page img {
+      position: relative;
+      z-index: 2;
       width: 100%;
       height: 100%;
       display: block;
@@ -103,16 +113,16 @@
     </div>
 
     <div id="flipbook">
-      <div class="page"><img src="pages/page_1.png?v=6" alt="Page 1"></div>
-      <div class="page"><img src="pages/page_2.png?v=6" alt="Page 2"></div>
-      <div class="page"><img src="pages/page_3.png?v=6" alt="Page 3"></div>
-      <div class="page"><img src="pages/page_4.png?v=6" alt="Page 4"></div>
-      <div class="page"><img src="pages/page_5.png?v=6" alt="Page 5"></div>
-      <div class="page"><img src="pages/page_6.png?v=6" alt="Page 6"></div>
-      <div class="page"><img src="pages/page_7.png?v=6" alt="Page 7"></div>
-      <div class="page"><img src="pages/page_8.png?v=6" alt="Page 8"></div>
-      <div class="page"><img src="pages/page_9.png?v=6" alt="Page 9"></div>
-      <div class="page"><img src="pages/page_10.png?v=6" alt="Page 10"></div>
+      <div class="page"><img src="pages/page_1.png?v=7" alt="Page 1"></div>
+      <div class="page"><img src="pages/page_2.png?v=7" alt="Page 2"></div>
+      <div class="page"><img src="pages/page_3.png?v=7" alt="Page 3"></div>
+      <div class="page"><img src="pages/page_4.png?v=7" alt="Page 4"></div>
+      <div class="page"><img src="pages/page_5.png?v=7" alt="Page 5"></div>
+      <div class="page"><img src="pages/page_6.png?v=7" alt="Page 6"></div>
+      <div class="page"><img src="pages/page_7.png?v=7" alt="Page 7"></div>
+      <div class="page"><img src="pages/page_8.png?v=7" alt="Page 8"></div>
+      <div class="page"><img src="pages/page_9.png?v=7" alt="Page 9"></div>
+      <div class="page"><img src="pages/page_10.png?v=7" alt="Page 10"></div>
     </div>
 
     <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
