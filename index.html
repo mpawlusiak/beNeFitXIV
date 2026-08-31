@@ -60,12 +60,12 @@
       backface-visibility: hidden;
       transform-style: preserve-3d;
       background: transparent !important;
-      transition: filter 0.6s ease-in-out;
+      transition: filter 0.5s ease-in-out;
     }
 
-    /* Apply smooth blur to pages that are currently buried underneath active spreads */
+    /* Target wrapper state managed cleanly via API callbacks */
     #flipbook .page.is-buried img {
-      filter: blur(10px);
+      filter: blurpx;
     }
 
     .nav-arrow {
@@ -106,16 +106,16 @@
     </div>
 
     <div id="flipbook">
-      <div class="page"><img src="pages/page_1.png?v=9" alt="Page 1"></div>
-      <div class="page"><img src="pages/page_2.png?v=9" alt="Page 2"></div>
-      <div class="page"><img src="pages/page_3.png?v=9" alt="Page 9"></div>
-      <div class="page"><img src="pages/page_4.png?v=9" alt="Page 4"></div>
-      <div class="page"><img src="pages/page_5.png?v=9" alt="Page 5"></div>
-      <div class="page"><img src="pages/page_6.png?v=9" alt="Page 6"></div>
-      <div class="page"><img src="pages/page_7.png?v=9" alt="Page 7"></div>
-      <div class="page"><img src="pages/page_8.png?v=9" alt="Page 8"></div>
-      <div class="page"><img src="pages/page_9.png?v=9" alt="Page 9"></div>
-      <div class="page"><img src="pages/page_10.png?v=9" alt="Page 10"></div>
+      <div class="page" data-page="1"><img src="pages/page_1.png?v=10" alt="Page 1"></div>
+      <div class="page" data-page="2"><img src="pages/page_2.png?v=10" alt="Page 2"></div>
+      <div class="page" data-page="3"><img src="pages/page_3.png?v=10" alt="Page 3"></div>
+      <div class="page" data-page="4"><img src="pages/page_4.png?v=10" alt="Page 4"></div>
+      <div class="page" data-page="5"><img src="pages/page_5.png?v=10" alt="Page 5"></div>
+      <div class="page" data-page="6"><img src="pages/page_6.png?v=10" alt="Page 6"></div>
+      <div class="page" data-page="7"><img src="pages/page_7.png?v=10" alt="Page 7"></div>
+      <div class="page" data-page="8"><img src="pages/page_8.png?v=10" alt="Page 8"></div>
+      <div class="page" data-page="9"><img src="pages/page_9.png?v=10" alt="Page 9"></div>
+      <div class="page" data-page="10"><img src="pages/page_10.png?v=10" alt="Page 10"></div>
     </div>
 
     <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
@@ -171,33 +171,20 @@
         container.style.height = size.h + 'px';
       }
 
-      function updateBlurStates(){
+      function updateBlurStates(targetView){
         const $book = $('#flipbook');
-        const view = $book.turn('view'); // Returns active page numbers e.g. [0, 2] or [3, 4]
-        const totalPages = $book.turn('pages');
+        const view = targetView || $book.turn('view');
 
-        // Find the maximum active page currently visible
-        let maxActive = 0;
-        let minActive = totalPages + 1;
+        $('#flipbook .page').each(function(){
+          const $p = $(this);
+          const pNum = parseInt($p.attr('data-page'), 10);
+          
+          let isInView = view.includes(pNum);
 
-        view.forEach(function(p){
-          if(p > 0) {
-            if(p > maxActive) maxActive = p;
-            if(p < minActive) minActive = p;
-          }
-        });
-
-        // Loop through all pages and apply .is-buried if they are sitting underneath an active open spread
-        $('#flipbook .page').each(function(index){
-          const pageNum = index + 1;
-          const $page = $(this);
-
-          // If a page is lower than the current left-side page, it's buried in the back stack
-          // If a page is higher than the current right-side page, it's buried in the front stack
-          if (pageNum < minActive || (maxActive > 0 && pageNum > maxActive)) {
-            $page.addClass('is-buried');
+          if (isInView) {
+            $p.removeClass('is-buried');
           } else {
-            $page.removeClass('is-buried');
+            $p.addClass('is-buried');
           }
         });
       }
@@ -228,6 +215,7 @@
           when: {
             turning: function(e, page, view){ 
               isTurning = true; 
+              updateBlurStates(view);
             },
             turned:  function(e, page){ 
               isTurning = false; 
