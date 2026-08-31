@@ -45,7 +45,10 @@
       border: none !important;
     }
 
-    #flipbook .page {
+    /* Force all pages and dynamic turn wrappers to remain fully opaque so underlying pages show constantly */
+    #flipbook .page,
+    #flipbook .turn-page-wrapper {
+      opacity: 1 !important;
       overflow: hidden;
       position: relative;
     }
@@ -99,7 +102,6 @@
     </div>
 
     <div id="flipbook">
-      <!-- Query parameters (?v=2) added to bypass browser and GitHub CDN caching -->
       <div class="page"><img src="pages/page_1.png?v=2"  alt="Page 1"></div>
       <div class="page"><img src="pages/page_2.png?v=2"  alt="Page 2"></div>
       <div class="page"><img src="pages/page_3.png?v=2"  alt="Page 3"></div>
