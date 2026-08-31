@@ -48,12 +48,10 @@
     #flipbook .page {
       overflow: hidden;
       position: relative;
-      opacity: 0.2;
-      transition: opacity 0.8s ease-in-out;
-    }
-
-    #flipbook .page.active-page {
-      opacity: 1;
+      /* Add a semi-transparent backing color with backdrop-filter blur to obstruct the underlying page */
+      background-color: rgba(255, 255, 255, 0.85) !important;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
     }
 
     #flipbook .page img {
@@ -105,16 +103,16 @@
     </div>
 
     <div id="flipbook">
-      <div class="page active-page"><img src="pages/page_1.png?v=5" alt="Page 1"></div>
-      <div class="page"><img src="pages/page_2.png?v=5" alt="Page 2"></div>
-      <div class="page"><img src="pages/page_3.png?v=5" alt="Page 3"></div>
-      <div class="page"><img src="pages/page_4.png?v=5" alt="Page 4"></div>
-      <div class="page"><img src="pages/page_5.png?v=5" alt="Page 5"></div>
-      <div class="page"><img src="pages/page_6.png?v=5" alt="Page 6"></div>
-      <div class="page"><img src="pages/page_7.png?v=5" alt="Page 7"></div>
-      <div class="page"><img src="pages/page_8.png?v=5" alt="Page 8"></div>
-      <div class="page"><img src="pages/page_9.png?v=5" alt="Page 9"></div>
-      <div class="page"><img src="pages/page_10.png?v=5" alt="Page 10"></div>
+      <div class="page"><img src="pages/page_1.png?v=6" alt="Page 1"></div>
+      <div class="page"><img src="pages/page_2.png?v=6" alt="Page 2"></div>
+      <div class="page"><img src="pages/page_3.png?v=6" alt="Page 3"></div>
+      <div class="page"><img src="pages/page_4.png?v=6" alt="Page 4"></div>
+      <div class="page"><img src="pages/page_5.png?v=6" alt="Page 5"></div>
+      <div class="page"><img src="pages/page_6.png?v=6" alt="Page 6"></div>
+      <div class="page"><img src="pages/page_7.png?v=6" alt="Page 7"></div>
+      <div class="page"><img src="pages/page_8.png?v=6" alt="Page 8"></div>
+      <div class="page"><img src="pages/page_9.png?v=6" alt="Page 9"></div>
+      <div class="page"><img src="pages/page_10.png?v=6" alt="Page 10"></div>
     </div>
 
     <div class="nav-arrow arrow-right" id="nextBtn" aria-label="Next page">
@@ -170,18 +168,6 @@
         container.style.height = size.h + 'px';
       }
 
-      function updateActivePages(){
-        const $book = $('#flipbook');
-        const view = $book.turn('view');
-        
-        $('#flipbook .page').removeClass('active-page');
-        view.forEach(function(pageNum){
-          if(pageNum > 0){
-            $('#flipbook .page').eq(pageNum - 1).addClass('active-page');
-          }
-        });
-      }
-
       function updateArrows(){
         const $book = $('#flipbook');
         const current = $book.turn('page')  || 1;
@@ -211,7 +197,6 @@
             },
             turned:  function(e, page){ 
               isTurning = false; 
-              updateActivePages();
               updateArrows(); 
             }
           }
@@ -220,8 +205,6 @@
         const container = document.getElementById('flipbook-container');
         container.style.width  = initialSize.w + 'px';
         container.style.height = initialSize.h + 'px';
-        
-        updateActivePages();
       }
 
       function bindNav(){
