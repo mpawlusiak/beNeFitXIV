@@ -15,6 +15,10 @@
       --radius:0px;
       --duration:700ms;
       --easing:cubic-bezier(.22,.61,.36,1);
+      --shadow-x:0px;
+      --shadow-y:10px;
+      --shadow-blur:18px;
+      --shadow-color:rgba(0,0,0,.35);
     }
 
     .fit{position:fixed;inset:0;display:grid;place-items:center;background:transparent}
@@ -35,10 +39,11 @@
       box-shadow:0 0 0 2px black,0 0 0 6px rgba(0,153,255,.6)
     }
     .face{
-      position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);overflow:hidden;
+      position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);overflow:visible;
     }
     .face > img{
-      width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none
+      width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none;
+      filter:drop-shadow(var(--shadow-x) var(--shadow-y) var(--shadow-blur) var(--shadow-color));
     }
 
     .back{transform:rotateY(180deg)}
