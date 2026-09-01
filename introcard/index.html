@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Genially Flip Card - Sharp Fit</title>
   <style>
-    /* Base */
     *,*::before,*::after{box-sizing:border-box}
     html,body{height:100%}
     body{margin:0;background:transparent;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
@@ -18,18 +17,13 @@
       --easing:cubic-bezier(.22,.61,.36,1);
     }
 
-    /* Fill iframe and center */
     .fit{position:fixed;inset:0;display:grid;place-items:center;background:transparent}
-
-    /* The box we size in real pixels */
     .box{width:1872px;height:1262px}
 
-    /* Hover lift */
     .shell{width:100%;height:100%;transition:transform var(--duration) var(--easing);will-change:transform;border-radius:var(--radius)}
     .shell:hover{transform:translateY(-6px)}
     .shell:has(.flip-card:focus-visible){transform:translateY(-2px)}
 
-    /* Flip card */
     .flip-card{
       position:relative;width:100%;height:100%;
       transform-style:preserve-3d;transition:transform var(--duration) var(--easing);
@@ -43,8 +37,6 @@
     .face{
       position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);overflow:hidden;
     }
-
-    /* PNG Image Fitting */
     .face > img{
       width:100%;height:100%;object-fit:contain;display:block;pointer-events:none;user-select:none
     }
@@ -61,16 +53,10 @@
       <div class="shell">
         <button id="card" class="flip-card" type="button" aria-pressed="false" aria-label="Show back of card" title="Click or press Space/Enter to flip">
           <div class="face front" aria-hidden="false">
-            <img alt="Intro card front"
-                 decoding="async"
-                 draggable="false"
-                 src="https://raw.githubusercontent.com/mpawlusiak/beNeFitXIV/1aebf9528f71f280239d8afd3bee181b9e09d282/introcard/Invite_Front.png">
+            <img id="frontImg" alt="Intro card front" decoding="async" draggable="false">
           </div>
           <div class="face back" aria-hidden="true">
-            <img alt="Intro card back"
-                 decoding="async"
-                 draggable="false"
-                 src="https://raw.githubusercontent.com/mpawlusiak/beNeFitXIV/1aebf9528f71f280239d8afd3bee181b9e09d282/introcard/Invite_Back.png">
+            <img id="backImg" alt="Intro card back" decoding="async" draggable="false">
           </div>
         </button>
       </div>
@@ -80,11 +66,26 @@
   <script>
     (function () {
       const BASE_W = 1872, BASE_H = 1262;
+
+      // --- Image sources -----------------------------------------------
+      // Points at the BRANCH (main), not a commit hash, so new images
+      // pushed to the repo show up automatically — combined with the
+      // cache-buster below, no manual URL updates needed going forward.
+      const REPO_BRANCH_BASE =
+        "https://raw.githubusercontent.com/mpawlusiak/beNeFitXIV/main/introcard/";
+
+      // Cache-buster: forces a fresh fetch every page load instead of
+      // relying on GitHub's/browser's CDN cache.
+      const cacheBust = "?v=" + Date.now();
+
+      document.getElementById("frontImg").src = REPO_BRANCH_BASE + "Invite_Front.png" + cacheBust;
+      document.getElementById("backImg").src  = REPO_BRANCH_BASE + "Invite_Back.png"  + cacheBust;
+      // -------------------------------------------------------------------
+
       const fit = document.getElementById('fit');
       const box = document.getElementById('box');
       const card = document.getElementById('card');
 
-      // Flip + ARIA
       function flip(){
         const is = card.classList.toggle('flipped');
         card.setAttribute('aria-pressed', String(is));
@@ -97,7 +98,6 @@
         if (e.key === ' ' || e.key === 'Enter'){ e.preventDefault(); flip(); }
       });
 
-      // Contain-fit sizing
       function resize(){
         const w = fit.clientWidth || window.innerWidth;
         const h = fit.clientHeight || window.innerHeight;
