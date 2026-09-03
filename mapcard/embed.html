@@ -21,6 +21,9 @@
 </style>
 </head>
 <body>
-  <img src="Map%20Full.png">
+  <img id="mapImg">
+  <script>
+    document.getElementById('mapImg').src = "Map%20Full.png?t=" + Date.now();
+  </script>
 </body>
 </html>
